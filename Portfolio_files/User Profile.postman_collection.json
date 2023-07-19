@@ -1,0 +1,429 @@
+{
+	"info": {
+		"_postman_id": "ab9220f0-830c-459b-bd3c-7ce1e83a4a26",
+		"name": "User Profile",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28541272"
+	},
+	"item": [
+		{
+			"name": "authorization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var userToken = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"userToken\", userToken.token);\r",
+							"pm.collectionVariables.set(\"userId\", userToken.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "pasdr111",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "e1f955221f",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://test-stand.gb.ru/gateway/login",
+					"protocol": "https",
+					"host": [
+						"test-stand",
+						"gb",
+						"ru"
+					],
+					"path": [
+						"gateway",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Имя\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.firstName).to.eql(\"\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Фамилия\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.lastName).to.eql(\"\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Логин\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.username).to.eql(\"pasdr111\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Пол\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.sex).to.eql(\"male\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Дата рождения\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.birthDate).to.eql(\"2005-12-25T00:00:00+00:00\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "{{userToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://test-stand.gb.ru/api/users/profile/{{userId}}",
+					"protocol": "https",
+					"host": [
+						"test-stand",
+						"gb",
+						"ru"
+					],
+					"path": [
+						"api",
+						"users",
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Profile with someone else's token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "79f1b9424cef7f5c05a280b0b53a8367",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://test-stand.gb.ru/api/users/profile/{{userId}}",
+					"protocol": "https",
+					"host": [
+						"test-stand",
+						"gb",
+						"ru"
+					],
+					"path": [
+						"api",
+						"users",
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "{{userToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/polsk/Desktop/Lepus_europaeus_(Causse_Méjean,_Lozère)-cropped.jpg"
+						},
+						{
+							"key": "firstName",
+							"value": "Иван",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Иванов",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "pasdr111",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "89162345566",
+							"type": "text"
+						},
+						{
+							"key": "sex",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "birthDate",
+							"value": "2005-12-25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://test-stand.gb.ru/gateway/users/profile/{{userId}}",
+					"protocol": "https",
+					"host": [
+						"test-stand",
+						"gb",
+						"ru"
+					],
+					"path": [
+						"gateway",
+						"users",
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile with empty name and lastname",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "{{userToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/polsk/Desktop/Lepus_europaeus_(Causse_Méjean,_Lozère)-cropped.jpg"
+						},
+						{
+							"key": "firstName",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "pasdr111",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "89162345566",
+							"type": "text"
+						},
+						{
+							"key": "sex",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "birthDate",
+							"value": "2005-12-25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://test-stand.gb.ru/gateway/users/profile/{{userId}}",
+					"protocol": "https",
+					"host": [
+						"test-stand",
+						"gb",
+						"ru"
+					],
+					"path": [
+						"gateway",
+						"users",
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile with empty username",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "{{userToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/polsk/Desktop/Lepus_europaeus_(Causse_Méjean,_Lozère)-cropped.jpg"
+						},
+						{
+							"key": "firstName",
+							"value": "Антон",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Антонов",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "89162345566",
+							"type": "text"
+						},
+						{
+							"key": "sex",
+							"value": "male",
+							"type": "text"
+						},
+						{
+							"key": "birthDate",
+							"value": "2005-12-25",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://test-stand.gb.ru/gateway/users/profile/{{userId}}",
+					"protocol": "https",
+					"host": [
+						"test-stand",
+						"gb",
+						"ru"
+					],
+					"path": [
+						"gateway",
+						"users",
+						"profile",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "userToken",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		}
+	]
+}
